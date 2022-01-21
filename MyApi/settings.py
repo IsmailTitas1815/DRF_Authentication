@@ -145,4 +145,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIT_PORT = 587
 # EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = 'ismailtitas1815@gmail.com'
-# EMAIL_HOST_PASSWORD = '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'
+# EMAIL_HOST_PASSWORD = ''

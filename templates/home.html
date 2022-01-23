@@ -10,10 +10,7 @@
     <div class="container">
         <div class="row">
             <div class="col-xl-8 offset-xl-2 py-5">
-                <h1>Send Email Django Tutorial from <a href="https://studygyaan.com/">StudyGyaan.com</a></h1>
-                <p class="lead">This is a demo for our tutorial dedicated to crafting working Bootstrap contact form
-                    with Django.</p>
-
+                <h2>Send Mail and show in console</h2>
                 <form id="contact-form" action="{% url 'send_email' %}" role="form">
                     {% csrf_token %}
                     <div class="messages">

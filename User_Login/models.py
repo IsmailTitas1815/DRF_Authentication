@@ -72,6 +72,29 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
+class Survey(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='survey')
+    answer1 = models.CharField(max_length=255, blank=False, null=False)
+    answer2 = models.CharField(max_length=255, blank=False, null=False)
+    answer3 = models.CharField(max_length=255, blank=False, null=False)
+    answer4 = models.CharField(max_length=255, blank=False, null=False)
+    answer5 = models.CharField(max_length=255, blank=False, null=False)
+
+    def __str__(self):
+        return self.user +"'s Survey"+" "+ self.pk
+    
+
+class Friend(models.Model):
+    # who sent the request
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    # who will receive the request
+    friend = models.ForeignKey(
+        UserProfile, on_delete=models.CASCADE, related_name='friends')
+    # sender = models.CharField(max_length=20, default='requested')
+    status = models.CharField(max_length=20, default='requested')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 

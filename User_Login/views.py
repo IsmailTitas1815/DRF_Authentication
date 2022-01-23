@@ -1,14 +1,14 @@
-from django.core.mail import send_mail, send_mass_mail
+from django.core.mail import send_mail
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.views.generic import View
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from User_Login.models import UserProfile
+from User_Login.models import UserProfile, Survey, Friend
 from rest_framework import generics, status
 from rest_framework.response import Response
 
-from User_Login.serializers import UserProfileSerializer, ChangePasswordSerializer
+from User_Login.serializers import UserProfileSerializer, ChangePasswordSerializer, SurveySerializer, FriendSerializer
 
 
 class UserProfileViewSet(ModelViewSet):
@@ -52,6 +52,65 @@ class ChangePasswordView(generics.UpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class SurveyViewSet(ModelViewSet):
+    queryset = Survey.objects.all()
+    serializer_class = SurveySerializer
+    permission_classes = [IsAuthenticated, ]
+
+
+class FriendViewSet(generics.UpdateAPIView):
+    queryset = Friend.objects.all()
+    serializer_class = FriendSerializer
+    permission_classes = [IsAuthenticated, ]
+
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            
+            self.object.save()
+            response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message': 'Password updated successfully',
+                'data': []
+            }
+
+            return Response(response)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AllFriendViewSet(generics.ListAPIView):
+    queryset = Friend.objects.all()
+    serializer_class = FriendSerializer
+    permission_classes = [IsAuthenticated, ]
+    lookup_field = 'UserProfile.id'
+
+    def retrieve(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            
+            self.object.save()
+            response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message': 'Password updated successfully',
+                'data': []
+            }
+
+            return Response(response)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+#lookup_field
+
 class SendFormEmail(View):
 
     def get(self, request):
@@ -61,9 +120,9 @@ class SendFormEmail(View):
         email = request.GET.get('email', None)
         message = request.GET.get('message', None)
 
-        # Send Email
+        # Send Email and print in console
         send_mail(
-            'Subject - Django Email Testing',
+            'Django Email Testing',
             'Hello ' + name + ',\n' + message,
             'ismailtitas1815@gmail.com',  # Admin
             [
